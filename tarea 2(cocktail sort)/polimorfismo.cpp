@@ -1,21 +1,23 @@
 #include <iostream>
 #include <time.h>
 #include <random>
+#define size 1000000
+#define tam_rand 1000
 using namespace std;
 
-int* GenerarArray(int tam){
+int* GenerarArray(){
 	srand (time(NULL));
-	int temp[10];
-	int* head=temp;
-	for(int i=0;i<tam;i++){
-		temp[i] = rand() % 1000;
+	int* head=new int[size];
+	int*temp=head;
+	
+	for(int i=0;i<size;i++){
+		temp[i] = rand() % tam_rand;
 	}
+	
 	return head;
 }
-void BorrarArray(int* head, int tam){
-	for(int i=0;i<tam;i++){
-		delete (head+i);
-	}
+void BorrarArray(int* head){
+	delete[] head;
 }
 
 class cocktailsort_
@@ -78,19 +80,17 @@ public:
 
 int main()
 {
-	int tam=5;
-	int* a= GenerarArray(tam);
-	int *p=a+tam-1;
-	/*cout<<"ahlkjh";
-	for(int i=0;i<tam;i++){
+	int* a= GenerarArray();
+	int *p=a+size-1;
+	/*for(int i=0;i<tam;i++){
 		cout<< a[i]<<" ";
 	}*/
 	
-	mayorAmenor b;
+	menorAmayor b;
 	b.cocktailsort(a,p);
 	
-	for(int i=0;i<tam;i++){
+	for(int i=0;i<size;i++){
 		cout<< a[i]<<" ";
 	}
-	BorrarArray(a,tam);
+	BorrarArray(a);
 }

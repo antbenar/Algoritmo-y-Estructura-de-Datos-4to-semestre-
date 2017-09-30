@@ -5,11 +5,13 @@ template<typename T>
 class nodo{
 public:
 	T dato;
-	nodo* next;
+	nodo* left;
+	nodo* right;
 	
 	nodo(T dato_){
 		dato=dato_;
-		next=NULL;
+		left=NULL;
+		right=NULL;
 	}
 };
 
@@ -17,12 +19,10 @@ template<typename T>
 class Lista{
 public:
 	nodo<T> *head;
-	int num_nodos;
 	
 	Lista(T dato_)
 	{
 		head = new nodo<T> (dato_);
-		num_nodos++;
 	}
 	
 	~Lista(){
@@ -37,10 +37,11 @@ public:
 	bool buscar(T dato_, nodo<T>**& nodo_devuelto){
 		nodo<T> **temp=&head;                      
 		
-		while(*(temp)!=NULL && (*temp)->dato<dato_){
-			temp=&((*temp)->next);                      
+		while(*(temp)->left != NULL && *(temp)->right != NULL && *(temp)->dato != dato){
+			if(dato_ < *(temp)->dato)temp=&(*temp)->right;
+			else temp=&(*temp)->left;
 		}
-		nodo_devuelto=temp;       
+		
 		if((*temp)==NULL || (*temp)->dato!=dato_){
 			return false;
 		}
