@@ -37,9 +37,8 @@ public:
 	}
 	
 	void insertar(T data_){
-		nodo<T> *new_nodo = new nodo<T> (data_);
 		nodo<T> *temp = head;
-		
+		nodo<T> *new_nodo = new nodo<T> (data_);
 		if (!head) {
 			head = new_nodo;
 		} 
@@ -52,8 +51,10 @@ public:
 				while ((temp->next != NULL) && (temp->next->dato < data_)) {
 					temp = temp->next;
 				}
-				new_nodo->next = temp->next;
-				temp->next = new_nodo;
+				if(temp->dato!=data_){
+					new_nodo->next = temp->next;
+					temp->next = new_nodo;
+				}
 			}
 		}
 	}	
@@ -61,31 +62,38 @@ public:
 	void borrar(T dato_){
 		nodo<T> *temp = head;
 		
-		if (head->dato == dato_) {
+		if(!head){return;}
+		else if (head->dato == dato_) {
 			head = head->next;
 			delete temp;
 		} 
 		else {
-			while (temp->next->next) {
+			while (temp->next) {
 				if (temp->next->dato == dato_) {
+					nodo<T> *aux_node = temp->next;
 					if(temp->next->next){
-						nodo<T> *aux_node = temp->next;
 						temp->next = temp->next->next;
 						delete aux_node;
+						return;
+					}
+					else{
+						temp->next = NULL;
+						delete aux_node;
+						return;
 					}
 				}
 				temp = temp->next;
-			}
-			if(temp->next->dato==dato_){
-				nodo<T> *aux_node = temp->next;
-				temp->next = NULL;
-				delete aux_node;
 			}
 		}
 	}
 
 	void imprimir(){
+		if(!head){
+			cout<<"lista vacia"<<endl;
+			return;
+		}
 		nodo<int> *temp=head;
+		
 		while(temp->next!=NULL){
 			cout<<temp->dato<<", ";
 			temp=temp->next;
@@ -96,9 +104,10 @@ public:
 int main(int argc, char *argv[]) {
 	Lista <int>a;
 	a.insertar(5);
-	a.insertar(6);
-	a.insertar(7);
-	a.borrar(4);
+	a.insertar(5);
+	a.insertar(5);
+	a.insertar(8);
+
 	a.imprimir();
 }
 
