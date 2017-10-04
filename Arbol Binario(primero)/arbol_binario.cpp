@@ -2,7 +2,7 @@
 using namespace std;
 
 template<typename T>
-class nodo{
+struct nodo{
 public:
 	T dato;
 	nodo* left;
@@ -16,32 +16,31 @@ public:
 };
 
 template<typename T>
-class Lista{
+class Arbol_binario{
 public:
 	nodo<T> *head;
 	
-	Lista(T dato_)
+	Arbol_binario()
+	{
+		head = NULL;
+	}
+	
+	Arbol_binario(T dato_)
 	{
 		head = new nodo<T> (dato_);
 	}
 	
-	~Lista(){
-		nodo<T> *temp=head;
-		while(temp!=NULL){
-			head=head->next;
-			delete temp;
-			temp=head;
-		}
-	}
-	
-	bool buscar(T dato_, nodo<T>**& nodo_devuelto){
+	/*bool buscar(T dato_, nodo<T>** &nodo_devuelto){
 		nodo<T> **temp=&head;                      
 		
-		while(*(temp)->left != NULL && *(temp)->right != NULL && *(temp)->dato != dato){
-			if(dato_ < *(temp)->dato)temp=&(*temp)->right;
-			else temp=&(*temp)->left;
+		while( *temp ){
+			if( dato_ < (*temp)->dato){
+				temp=&(*temp)->left;
+			}
+			else {
+				temp=&(*temp)->right;
+			}
 		}
-		
 		if((*temp)==NULL || (*temp)->dato!=dato_){
 			return false;
 		}
@@ -49,41 +48,73 @@ public:
 	}
 	
 	void insertar(T dato_){
-		nodo<T>** next_insert;
-		if (!buscar(dato_,next_insert)){
-			nodo<T>* aux=new nodo<T>(dato_);
-			aux->next=*next_insert;
-			*next_insert=aux;
+		
+		if(!head){
+			nodo<T>* new_nodo=new nodo<T>(dato_);
+			head = new_nodo;
+		}
+		else {
+			nodo <T> **next_insert;
+			if (!buscar(dato_,next_insert)){
+				nodo<T>* new_nodo=new nodo<T>(dato_);
+				*next_insert = new_nodo;
+			}
+		}
+	}*/
+	
+	void insertar(nodo<T>* &arbol, T dato_){
+		if(!arbol){
+			nodo<T>* new_nodo=new nodo<T>(dato_);
+			arbol = new_nodo;
+		}
+		else if(dato_ < arbol->dato){
+		   insertar(arbol->left, dato_);
+		}
+		else if(dato_ > arbol->dato){
+			insertar(arbol->right, dato_);
 		}
 	}
 	
-	void borrar(T dato_){
+	
+	/*void borrar(T dato_){
 		nodo<T>** nodo_borrar;
 		if (buscar(dato_,nodo_borrar)){
 			nodo<T>* aux= (*nodo_borrar)->next;
 			delete (*nodo_borrar);
 			*nodo_borrar=aux;
 		}
+	}*/
+	
+	void imprimir_en_Orden(nodo<T> *pointer){
+		if(pointer){
+			imprimir_en_Orden(pointer->left);
+			cout<<pointer->dato<<", ";
+			imprimir_en_Orden(pointer->right);
+		}
 	}
 	
-	void imprimir(){
-		nodo<int> *temp=head;
-		while(temp->next!=NULL){
-			cout<<temp->dato<<", ";
-			temp=temp->next;
-		}cout<<temp->dato<<endl;
+	void destructor(nodo<T>* &pointer){
+		if(pointer){
+			destructor(pointer->left);
+			destructor(pointer->right);
+			delete pointer;
+		}
+	}
+	
+	~Arbol_binario(){
+		destructor(head);
 	}
 };
 
 int main(int argc, char *argv[]) {
-	Lista<int> lista(6);
-	lista.insertar(5);
-	lista.insertar(3);
-	lista.insertar(7);
+	Arbol_binario<int> lista(6);
+	lista.insertar(lista.head,5);
+	lista.insertar(lista.head,7);
+	lista.insertar(lista.head,8);
 	//lista.borrar(9);
 	//lista.borrar(5);
 	
-	lista.imprimir();
+	lista.imprimir_en_Orden(lista.head);
 	
 	return 0;
 }
