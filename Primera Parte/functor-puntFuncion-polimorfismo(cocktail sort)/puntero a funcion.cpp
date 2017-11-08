@@ -6,6 +6,7 @@ void swap(int *p, int *q){
 	*p=*q;
 	*q=temp;
 }
+
 bool menorAmayor_(int *p1, int *q){
 	return *p1>*q;
 }
@@ -18,7 +19,7 @@ typedef bool (*firma)(int *p, int *q);
 firma mayorAmenor=mayorAmenor_;
 firma menorAmayor=menorAmayor_;
 
-void cocktailsort(int*p,int*s,firma tipoOrdenacion )
+void cocktailsort(int*p,int*s,(*tipoOrdenacion)(int *p, int *q) )
 {
 	int *temp2,*temp;
 	bool cambio = true;

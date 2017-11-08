@@ -30,7 +30,7 @@ public:
 		head = new nodo<T> (dato_);
 	}
 	
-	/*bool buscar(T dato_, nodo<T>** &nodo_devuelto){
+	bool buscar(T dato_, nodo<T>** &nodo_devuelto){
 		nodo<T> **temp=&head;                      
 		
 		while( *temp ){
@@ -60,30 +60,16 @@ public:
 				*next_insert = new_nodo;
 			}
 		}
-	}*/
+	}	
 	
-	void insertar(nodo<T>* &arbol, T dato_){
-		if(!arbol){
-			nodo<T>* new_nodo=new nodo<T>(dato_);
-			arbol = new_nodo;
-		}
-		else if(dato_ < arbol->dato){
-		   insertar(arbol->left, dato_);
-		}
-		else if(dato_ > arbol->dato){
-			insertar(arbol->right, dato_);
-		}
-	}
-	
-	
-	/*void borrar(T dato_){
+	void borrar(T dato_){
 		nodo<T>** nodo_borrar;
 		if (buscar(dato_,nodo_borrar)){
 			nodo<T>* aux= (*nodo_borrar)->next;
 			delete (*nodo_borrar);
 			*nodo_borrar=aux;
 		}
-	}*/
+	}
 	
 	void imprimir_en_Orden(nodo<T> *pointer){
 		if(pointer){
@@ -108,9 +94,9 @@ public:
 
 int main(int argc, char *argv[]) {
 	Arbol_binario<int> lista(6);
-	lista.insertar(lista.head,5);
-	lista.insertar(lista.head,7);
-	lista.insertar(lista.head,8);
+	lista.insertar(5);
+	lista.insertar(7);
+	lista.insertar(8);
 	//lista.borrar(9);
 	//lista.borrar(5);
 	
