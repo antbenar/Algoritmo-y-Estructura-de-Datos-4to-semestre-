@@ -107,15 +107,24 @@ public:
 		return 0;
 	}
 	
-	bool borrarEdgeByDato(N a, N b, E dato){
+	bool borrarEdgeByDato(N a, N b, bool dir, E dato){
 		Node *devuelto;
 		Node* devuelto2;
-		Edge *arista_devuelta;
-		int pos;
-		if(find(a,devuelto) && find(b,devuelto2) && find_edge(devuelto,devuelto2,dato,arista_devuelta,pos)){
-			devuelto->m_edges.erase(devuelto->m_edges.begin()+pos);
+		Edge * Edge_aux;
+		int  pos;
+		if(find(a,devuelto) && find(b,devuelto2) && find_edge(devuelto,devuelto2, dato, Edge_aux, pos)){
+			borrarEdge(devuelto,Edge_aux);
+			borrarEdge(devuelto2,Edge_aux);
+			if(dir!=1){
+				find_edge(devuelto2,devuelto, dato, Edge_aux, pos);
+				borrarEdge(devuelto,Edge_aux);
+				borrarEdge(devuelto2,Edge_aux);
+			}
+			return 1;
 		}
+		return 0;
 	}
+	
 	
 	bool borrarEdge(Node* nodo1, Edge* Edge_){
 		
@@ -165,6 +174,12 @@ public:
 		}
 		cout<<"_______________________________________"<<endl;
 	}
+	
+	void DIJKSTRA(Node a, Node b){
+		
+		
+	}
+	
 };
 
 int main(int argc, char *argv[]) {
@@ -178,10 +193,11 @@ int main(int argc, char *argv[]) {
 	g.InsertEdge('b','c',1,3);
 	g.InsertEdge('d','b',0,4);
 	
+	g.InsertEdge('a','c',0,2);
 	
-	//g.borrarEdgeByDato('d','b',4);
 	g.imprimir();
-	g.borrarNodo('b');
+	g.borrarEdgeByDato('d','b',0,4);
+	//g.borrarNodo('b');
 	g.imprimir();
 	return 0;
 }
