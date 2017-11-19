@@ -141,7 +141,7 @@ int josefus(Lista <T> &a, int salto){
 	nodo <T>* aux;
 	nodo <T>* temp= a.head;
 	while(a.num_nodos != 1){
-		i=salto; //cout<<"a"<<endl;
+		i=salto-1; //cout<<"a"<<endl;
 		while(i>0){
 			temp=temp->next; //cout<<"b"<<endl;
 			i--;
