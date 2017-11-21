@@ -33,42 +33,58 @@ public:
 	bool buscar(T dato_, nodo<T>** &nodo_devuelto){
 		nodo<T> **temp=&head;                      
 		
-		while( *temp ){
+		while( *temp && (*temp)->dato!=dato_){
 			if( dato_ < (*temp)->dato){
 				temp=&(*temp)->left;
 			}
-			else {
+			else{
 				temp=&(*temp)->right;
 			}
 		}
+		nodo_devuelto=temp;
 		if((*temp)==NULL || (*temp)->dato!=dato_){
 			return false;
 		}
 		return true;
 	}
 	
-	void insertar(T dato_){
-		
-		if(!head){
-			nodo<T>* new_nodo=new nodo<T>(dato_);
-			head = new_nodo;
+	bool insertar(T dato_){
+		nodo <T> **next_insert;
+		if (!buscar(dato_,next_insert)){
+			*next_insert = new nodo<T>(dato_);//cout<<(*next_insert)->dato<<",";
+			return 1;
 		}
-		else {
-			nodo <T> **next_insert;
-			if (!buscar(dato_,next_insert)){
-				nodo<T>* new_nodo=new nodo<T>(dato_);
-				*next_insert = new_nodo;
-			}
-		}
+		return 0;
 	}	
 	
-	void borrar(T dato_){
+	void buscar_suplente(nodo<T>** &nodo_devuelto){
+		nodo_devuelto = &(*nodo_devuelto)->left;
+		while((*nodo_devuelto)->right){
+			nodo_devuelto = &(*nodo_devuelto)->right;
+		}
+	}
+	
+	bool borrar(T dato_){
 		nodo<T>** nodo_borrar;
 		if (buscar(dato_,nodo_borrar)){
-			nodo<T>* aux= (*nodo_borrar)->next;
-			delete (*nodo_borrar);
-			*nodo_borrar=aux;
+			if((*nodo_borrar)->left && (*nodo_borrar)->right){
+				nodo<T>** nodo_suplente = nodo_borrar;
+				buscar_suplente(nodo_suplente);
+				(*nodo_borrar)->dato = (*nodo_suplente)->dato;
+				nodo_borrar=nodo_suplente;
+			}
+			nodo<T>* aux=*nodo_borrar;
+			if((*nodo_borrar)->left){
+				*nodo_borrar = (*nodo_borrar)->left;
+			}	
+			else {
+				*nodo_borrar = (*nodo_borrar)->right;
+			}
+			
+			delete aux;
+			return 1;
 		}
+		return 0;
 	}
 	
 	void imprimir_en_Orden(nodo<T> *pointer){
@@ -93,14 +109,18 @@ public:
 };
 
 int main(int argc, char *argv[]) {
-	Arbol_binario<int> lista(6);
-	lista.insertar(5);
-	lista.insertar(7);
+	Arbol_binario<int> lista(6);//cout<<lista.head->dato;
+	lista.insertar(4);//cout<<lista.head->dato;
+	lista.insertar(5);//cout<<lista.head->dato;
 	lista.insertar(8);
-	//lista.borrar(9);
-	//lista.borrar(5);
 	
-	lista.imprimir_en_Orden(lista.head);
+	lista.imprimir_en_Orden(lista.head);cout<<endl;
+	lista.borrar(4);
+	/*lista.borrar(3);
+	lista.borrar(6);
+	lista.borrar(2);
+	*/
+	lista.imprimir_en_Orden(lista.head);cout<<endl;
 	
 	return 0;
 }

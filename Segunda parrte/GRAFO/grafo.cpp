@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#define INFINITE 1000000
 using namespace std;
 
 template<class G>
@@ -82,12 +83,12 @@ public:
 				Edge *nuevo2 = new Edge(aux2,aux,dir,dato);
 				aux->m_edges.push_back(nuevo2);
 				aux2->m_edges.push_back(nuevo2);
-				cout<<"se inserto la arista con peso "<<dato<<" de "<<aux2->m_data<<" a "<<aux->m_data<<endl;
+				//cout<<"se inserto la arista con peso "<<dato<<" de "<<aux2->m_data<<" a "<<aux->m_data<<endl;
 			}
 			Edge *nuevo = new Edge(aux,aux2,dir,dato);
 			aux->m_edges.push_back(nuevo);
 			aux2->m_edges.push_back(nuevo);
-			cout<<"se inserto la arista con peso "<<dato<<" de "<<aux->m_data<<" a "<<aux2->m_data<<endl;
+			//cout<<"se inserto la arista con peso "<<dato<<" de "<<aux->m_data<<" a "<<aux2->m_data<<endl;
 			return 1;
 		}
 		return 0;
@@ -175,29 +176,111 @@ public:
 		cout<<"_______________________________________"<<endl;
 	}
 	
-	void DIJKSTRA(Node a, Node b){
+	bool findNodePos(Node* a, int& pos){
+		if(a==0){
+			return 0;
+		}
+		int i;
+		for(i=0;i<m_nodes.size();i++){
+			if(m_nodes[i]==a){
+				pos=i;
+				return 1;
+			}
+		}
+		return 0;
+	}
+	void DIJKSTRA(Node* a, Node* b, vector<E> &dist, vector<Node*>&previous){
+		//vector<E> dist(m_nodes.size(),INFINITE);
+		//vector<Node*> previous(m_nodes.size(),NULL);
+		dist.clear();
+		dist.resize(m_nodes.size(),INFINITE);
+		previous.clear();
+		previous.resize(m_nodes.size(),nullptr);
 		
+		int i,j,v,pos;
+		vector<Node*>Q = m_nodes;
+		int Q_size = Q.size();
+		findNodePos(a,i);
+		Node* u=Q[i];
+		dist[i]=0;
+		E aux=0;
+		while (Q_size != 0){
+			for(j=0;j < dist.size();j++){//BUSCO LA MENOR DISTANCIA
+				if( Q[j] )aux=dist[j];
+			}
+			
+			for(j=0;j < dist.size();j++){//BUSCO LA MENOR DISTANCIA
+				//cout<<i<<" dist: "<<dist[j]<<" aux: "<<aux<<endl;
+				if(Q[j] && dist[j]<=aux){
+					aux=dist[j];//cout<<"cccccccccccccccccccccccccccc"<<endl;
+					u = Q[j];//cout<<Q[j]->m_data<<endl;
+					Q[j]=nullptr;//LA EXTRAIGO DE Q Y LA USO PARA EL CALCULO DE DISTANCIAS
+					--Q_size;
+					i=j;
+				}
+			}
+			
+			if (dist[i] == INFINITE or Q[i]==b){
+				break;
+			}
+			//cout << i;break;
+			for(v=0 ; v < u->m_edges.size() ; v++){			//cout<<u->m_data;break;
+				if(u->m_edges[v]->m_nodes[0]==u){
+					aux = dist[i] + u->m_edges[v]->m_data;//cout<<"i "<<dist[i]<<" aux: "<<u->m_edges[v]->m_data<<endl;
+					findNodePos(u->m_edges[v]->m_nodes[1], pos);
+					if(aux < dist[pos] ) {//cout<<"cccccccc"<<endl;
+						dist[pos] = aux;
+						previous[pos] = u;
+					}
+				}
+			}
+		}
 		
+		vector<Node*> previous_result;
+		vector<E> dist_result;
+		findNodePos(b, pos);
+		previous_result.push_back(b);
+		while (previous[pos]!=0){
+			//cout<<previous[pos]->m_data<<endl;
+			//cout<<dist[pos]<<endl;
+			//cout<<pos<<endl;
+			dist_result.push_back(dist[pos]);
+			previous_result.push_back(previous[pos]);
+			findNodePos(previous[pos], pos);
+		}
+		
+		imprimirDijkstra(dist_result,previous_result);
 	}
 
+	void imprimirDijkstra(vector<E> dist, vector<Node*> previous){
+		for(int i = 0; i<dist.size() ; i++){
+			cout<<"previo de "<< previous[i]->m_data <<" es: " << previous[i+1]->m_data << " con peso: "<< dist[i] <<endl;
+		};
+	}
 };
 
 int main(int argc, char *argv[]) {
 	CGraph <char,int> g;
-	g.InsertNode('a');
-	g.InsertNode('b');
-	g.InsertNode('c');
-	g.InsertNode('d');
+	g.InsertNode('1');
+	g.InsertNode('2');
+	g.InsertNode('3');
+	g.InsertNode('4');
+	g.InsertNode('5');
+	g.InsertNode('6');
 	
-	g.InsertEdge('a','b',0,2);
-	g.InsertEdge('b','c',1,3);
-	g.InsertEdge('d','b',0,4);
+	g.InsertEdge('1','2',0,7);
+	g.InsertEdge('1','3',0,9);
+	g.InsertEdge('1','6',0,14);
+	g.InsertEdge('6','3',0,2);
+	g.InsertEdge('2','3',0,10);
+	g.InsertEdge('2','4',0,15);
+	g.InsertEdge('3','4',0,11);
+	g.InsertEdge('6','5',0,9);
+	g.InsertEdge('4','5',0,6);
 	
-	g.InsertEdge('a','c',0,2);
+	vector<int>dist;
+	vector< CNode < CGraph<char,int> >* > previous;
+	g.DIJKSTRA(g.m_nodes[0],g.m_nodes[4],dist,previous);
 	
-	g.imprimir();
-	g.borrarEdgeByDato('d','b',4);
-	g.borrarNodo('b');
-	g.imprimir();
 	return 0;
 }
