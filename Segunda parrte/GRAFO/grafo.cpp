@@ -261,12 +261,12 @@ public:
 
 int main(int argc, char *argv[]) {
 	CGraph <char,int> g;
-	g.InsertNode('1');
-	g.InsertNode('2');
-	g.InsertNode('3');
-	g.InsertNode('4');
-	g.InsertNode('5');
 	g.InsertNode('6');
+	g.InsertNode('5');
+	g.InsertNode('4');
+	g.InsertNode('3');
+	g.InsertNode('2');
+	g.InsertNode('1');
 	
 	g.InsertEdge('1','2',0,7);
 	g.InsertEdge('1','3',0,9);
@@ -280,7 +280,7 @@ int main(int argc, char *argv[]) {
 	
 	vector<int>dist;
 	vector< CNode < CGraph<char,int> >* > previous;
-	g.DIJKSTRA(g.m_nodes[0],g.m_nodes[4],dist,previous);
+	g.DIJKSTRA(g.m_nodes[5],g.m_nodes[1],dist,previous);
 	
 	return 0;
 }
