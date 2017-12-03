@@ -155,9 +155,10 @@ public:
 				nodo<T>* aux = *p;
 				p=&((*p)->hijos[0]);
 				recorrido.push(p);
-				while((*p)->hijos[1])
+				while((*p)->hijos[1]){
 					p=&((*p)->hijos[1]);
-				recorrido.push(p);
+					recorrido.push(p);
+				}
 				aux->dato=(*p)->dato;
 			}
 			nodo<T>* temp=*p;
