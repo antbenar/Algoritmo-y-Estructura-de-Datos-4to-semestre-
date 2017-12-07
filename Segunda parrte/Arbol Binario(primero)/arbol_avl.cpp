@@ -52,14 +52,15 @@ public:
 		return N->altura;
 	}
 	
-	int altura(nodo<T> *n,int l,int r){
+	int altura(nodo<T> *n){
+		int l=1, r=1;
 		if(!n)
 			return 0;
 		if(n->hijos[0]){
-			l=altura(n->hijos[0],l,r)+1;
+			l=altura(n->hijos[0])+1;
 		}
 		if(n->hijos[1]){
-			r=altura(n->hijos[1],0,r)+1;
+			r=altura(n->hijos[1])+1;
 		}
 		if(l>r)
 			return l;
@@ -71,14 +72,14 @@ public:
 	bool balancear(nodo<T> **n){
 		int l=1,r=1;
 		nodo<T>* temp;
-		if((altura((*n)->hijos[0],l,r)-altura((*n)->hijos[1],l,r)>=2)){
-			if(altura((*n)->hijos[0]->hijos[0],l,r)>altura((*n)->hijos[0]->hijos[1],l,r)){
+		if((altura((*n)->hijos[0])-altura((*n)->hijos[1])>=2)){
+			if( altura((*n)->hijos[0]->hijos[0])  >  altura((*n)->hijos[0]->hijos[1]) ){//LL
 				temp=(*n)->hijos[0];
 				(*n)->hijos[0]=(*n)->hijos[0]->hijos[1];
 				temp->hijos[1]=*n;
 				*n=temp;
 			}
-			else{
+			else{//RL
 				temp=(*n)->hijos[0]->hijos[1];
 				(*n)->hijos[0]->hijos[1]=temp->hijos[0];
 				temp->hijos[0]=(*n)->hijos[0];
@@ -88,8 +89,8 @@ public:
 			}
 			return 1;
 		}
-		if((altura((*n)->hijos[0],l,r)-altura((*n)->hijos[1],l,r)<=-2)){
-			if(altura((*n)->hijos[1]->hijos[0],l,r)>altura((*n)->hijos[1]->hijos[1],l,r)){
+		if((altura((*n)->hijos[0] )-altura((*n)->hijos[1] )<=-2)){
+			if(altura((*n)->hijos[1]->hijos[0] )  >  altura((*n)->hijos[1]->hijos[1] )){//LR
 				temp=(*n)->hijos[1]->hijos[0];
 				(*n)->hijos[1]->hijos[0]=temp->hijos[1];
 				temp->hijos[1]=(*n)->hijos[1];
@@ -97,7 +98,7 @@ public:
 				temp->hijos[0]=*n;
 				*n=temp;
 			}
-			else{
+			else{//RR
 				temp=(*n)->hijos[1];
 				(*n)->hijos[1]=(*n)->hijos[1]->hijos[0];
 				temp->hijos[0]=*n;
@@ -203,21 +204,18 @@ public:
 };
 
 int main(int argc, char *argv[]) {
-	Arbol_binario<int> lista(10);
-	lista.insertar(8);
+	Arbol_binario<int> lista(8);
+	//lista.insertar(8);
 	lista.insertar(15);
 	lista.insertar(7);
 	lista.insertar(9);
 	lista.insertar(11);
 	lista.insertar(16);
-	lista.insertar(17);
+	/*lista.insertar(17);
 	lista.insertar(18);
 	lista.insertar(19);
 	lista.insertar(20);
-	lista.insertar(21);
-	lista.borrar(17);
-	lista.borrar(16);
-	lista.borrar(11);
+	lista.insertar(21);*/
 		
 	lista.imprimir_Arbol(lista.head);cout<<endl;
 	return 0;
